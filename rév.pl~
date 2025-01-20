@@ -1,0 +1,60 @@
+animal(alligator).
+animal(cheval).
+animal(vache).
+
+animal(caribour).
+animal(ours).
+
+mutant(L):-animal(X),animal(Y),atom_chars(X,LX),atom_chars(Y,LY),
+ append(LX1,LX2,LX), not(LX1=[]),not(LX2=[]),
+ append(LX2,LY1,LY),append(LX,LY1,L1),atom_chars(L,L1),not(animal(L)).
+
+symboleSuivantE(X, Y):-
+    name(X, [A,B]),
+    A\=122,
+    E1 is B+1,
+    name(Y, [A,E1]).
+
+symboleSuivantE(X, Y):-
+    name(X, L),
+    reverse(L, [122, A]),
+    symboleSuivantE(A, Y).
+
+
+unSymbole(S):-
+    between(97, 122, L),
+    name(S, [L]).
+
+unSymbole(S):-
+    name(S, [A]),
+    A>122,
+    atom_concat(X, Y, S),
+    between(97,122,X),
+    between(97,122,Y),
+    name(X, [97]),
+    name(Y, [98]).
+
+
+% Cas de base : si la liste est vide, le résultat est une liste vide.
+filtre([], _, _, []).
+
+% Cas où le seuil est respecté et le flag est à 1 : inclure l'élément dans la liste résultante.
+filtre([T|Q], Seuil, 1, [T|L]) :-
+    T < Seuil,
+    filtre(Q, Seuil, 1, L).
+
+% Cas où le seuil n'est pas respecté et le flag est à 1 : ne pas inclure l'élément dans la liste résultante.
+filtre([_|Q], Seuil, 1, L) :-
+    filtre(Q, Seuil, 1, L).
+
+% Cas où le seuil est respecté et le flag est à 0 : inclure l'élément dans la liste résultante.
+filtre([T|Q], Seuil, 0, [T|L]) :-
+    T > Seuil,
+    filtre(Q, Seuil, 0, L).
+
+% Cas où le seuil n'est pas respecté et le flag est à 0 : ne pas inclure l'élément dans la liste résultante.
+filtre([_|Q], Seuil, 0, L) :-
+    filtre(Q, Seuil, 0, L),!.
+
+filtre([_|Q], Seuil, 1, L) :-
+    filtre(Q, Seuil, 1, L),!.

@@ -1,0 +1,21 @@
+
+affiche([A,B]):- not(member(A, [+,-,*,**,***,/])),
+not(number(B)),write('('), write(A), write('('), write(B), write(')'),
+write(')').
+
+affiche([A, B, C]):- member(A, [+, -, *, **, /]),not(is_list(B)), not(is_list(C)),((not(number(B)), number(C));(not(number(C)), number(B))), write('('), write(B), write(A), write(C), write(')').
+
+affiche([A,B,C]):- is_list(B),is_list(C), write('('), affiche(B), write(A), affiche(C), write(')').
+
+affiche([A,B,C]):- member(A, [+, -, *, **, /]), is_list(C), number(B), write('('), write(B), write(A), affiche(C), write(')').
+
+
+deriv([A, B, C], [A, D, E]):- not(number(A)), not(number(B)), number(C), D=1, E=0.
+
+
+calcul(A, A):- number(A).
+calcul([+, A, B], R):- calcul(A, D), calcul(B, P), R is  D+P.
+calcul([-, A, B], R):- calcul(A, D),  calcul(B, P), R is  D-P.
+calcul([*, A, B], R):- calcul(A, D),  calcul(B, P), R is  D*P.
+calcul([/, A, B], R):- calcul(A, D),  calcul(B, P), R is  D/P.
+
